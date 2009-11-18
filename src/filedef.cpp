@@ -178,7 +178,17 @@ void FileDef::writeDetailedDescription(OutputList &ol,const QCString &title)
     ol.startTextBlock();
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF"))
     {
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("<div class=\"repeatbrief\">");
+      ol.popGeneratorState();
+
       ol.parseDoc(briefFile(),briefLine(),this,0,briefDescription(),FALSE,FALSE);
+
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("</div>");
+      ol.popGeneratorState();
     }
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF") && 
         !documentation().isEmpty())
@@ -398,6 +408,15 @@ void FileDef::writeClassDeclarations(OutputList &ol,const QCString &title)
   if (classSDict) classSDict->writeDeclaration(ol,0,title,FALSE);
 }
 
+void FileDef::writeTextBlob(OutputList &ol,const QCString &textBlob)
+{
+   ol.pushGeneratorState();
+   ol.disableAllBut(OutputGenerator::Html);
+   ol.writeString(textBlob);
+   ol.enableAll();
+   ol.popGeneratorState();
+}
+
 void FileDef::startMemberDeclarations(OutputList &ol)
 {
   ol.startMemberSections();
@@ -602,6 +621,12 @@ void FileDef::writeDocumentation(OutputList &ol)
       case LayoutDocEntry::AuthorSection: 
         writeAuthorSection(ol);
         break;
+      case LayoutDocEntry::TextBlob:
+         {
+            LayoutDocEntryBlob *lb = (LayoutDocEntryBlob*)lde;
+            writeTextBlob(ol, lb->text);
+         }
+         break;
       case LayoutDocEntry::ClassIncludes:
       case LayoutDocEntry::ClassInheritanceGraph:
       case LayoutDocEntry::ClassNestedClasses:

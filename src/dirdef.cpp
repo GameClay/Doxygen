@@ -125,7 +125,17 @@ void DirDef::writeDetailedDescription(OutputList &ol,const QCString &title)
     // repeat brief description
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF"))
     {
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("<div class=\"repeatbrief\">");
+      ol.popGeneratorState();
+
       ol.parseDoc(briefFile(),briefLine(),this,0,briefDescription(),FALSE,FALSE);
+
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("</div>");
+      ol.popGeneratorState();
     }
     // separator between brief and details
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF") && 
@@ -304,6 +314,15 @@ void DirDef::writeFileList(OutputList &ol)
   }
 }
 
+void DirDef::writeTextBlob(OutputList &ol,const QCString &textBlob)
+{
+   ol.pushGeneratorState();
+   ol.disableAllBut(OutputGenerator::Html);
+   ol.writeString(textBlob);
+   ol.enableAll();
+   ol.popGeneratorState();
+}
+
 void DirDef::startMemberDeclarations(OutputList &ol)
 {
   ol.startMemberSections();
@@ -379,6 +398,12 @@ void DirDef::writeDocumentation(OutputList &ol)
           writeDetailedDescription(ol,ls->title);
         }
         break;
+      case LayoutDocEntry::TextBlob:
+         {
+            LayoutDocEntryBlob *lb = (LayoutDocEntryBlob*)lde;
+            writeTextBlob(ol, lb->text);
+         }
+         break;
       case LayoutDocEntry::ClassIncludes:
       case LayoutDocEntry::ClassInheritanceGraph:
       case LayoutDocEntry::ClassNestedClasses:

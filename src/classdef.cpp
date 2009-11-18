@@ -898,7 +898,17 @@ void ClassDef::writeDetailedDescription(OutputList &ol, const QCString &pageType
     // repeat brief description
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF"))
     {
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("<div class=\"repeatbrief\">");
+      ol.popGeneratorState();
+
       ol.parseDoc(briefFile(),briefLine(),this,0,briefDescription(),FALSE,FALSE);
+
+      ol.pushGeneratorState();
+        ol.disableAllBut(OutputGenerator::Html);
+        ol.writeString("</div>");
+      ol.popGeneratorState();
     }
     if (!briefDescription().isEmpty() && Config_getBool("REPEAT_BRIEF") &&
         !documentation().isEmpty())
@@ -1520,6 +1530,12 @@ void ClassDef::writeDocumentation(OutputList &ol)
       case LayoutDocEntry::AuthorSection: 
         writeAuthorSection(ol);
         break;
+      case LayoutDocEntry::TextBlob:
+        {
+          LayoutDocEntryBlob *lb = (LayoutDocEntryBlob*)lde;
+          writeTextBlob(ol, lb->text);
+        }
+        break;
       case LayoutDocEntry::NamespaceNestedNamespaces:
       case LayoutDocEntry::NamespaceClasses:
       case LayoutDocEntry::FileClasses:
@@ -2038,6 +2054,15 @@ void ClassDef::writeDeclaration(OutputList &ol,MemberDef *md,bool inGroup)
   }
   writePlainMemberDeclaration(ol,MemberList::friends,inGroup);
   writePlainMemberDeclaration(ol,MemberList::related,inGroup);
+}
+
+void ClassDef::writeTextBlob(OutputList &ol,const QCString &textBlob)
+{
+   ol.pushGeneratorState();
+   ol.disableAllBut(OutputGenerator::Html);
+   ol.writeString(textBlob);
+   ol.enableAll();
+   ol.popGeneratorState();
 }
 
 /*! a link to this class is possible within this project */
@@ -3422,4 +3447,3 @@ void ClassDef::reclassifyMember(MemberDef *md,MemberDef::MemberType t)
   }
   insertMember(md);
 }
-

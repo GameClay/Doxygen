@@ -172,6 +172,15 @@ omitted even if it is set to \c yes (i.e. no empty sections are generated).
 Some tags have a \c title attribute. This attribute can be used
 to customize the title doxygen will use as a header for the piece.
 
+The \c textblob tag allows you to insert text from a file at any point
+in the layout. If the \c file attribute is empty, or the doxygen cannot
+find the specified file, no text will be added to the page by this tag.
+\verbatim
+  ...
+  <textblob file="foo.txt"/>
+  ...
+\endverbatim
+
 @warning at the moment you should not remove tags from the layout file
 as a way to hide information. Doing so can cause broken links in the 
 generated output!
@@ -195,6 +204,8 @@ At the moment the following generic tags are possible for each page:
   <dd>Represents the detailed member list on a page (member definition).
       Like the \c memberdecl tag, also this tag has a number of 
       possible child tags. 
+<dt>\c textblob
+  <dd>Text from a file.
 </dl>
 
 The class page has the following specific tags:

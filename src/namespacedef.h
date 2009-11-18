@@ -100,6 +100,7 @@ class NamespaceDef : public Definition
     void writeNamespaceDeclarations(OutputList &ol,const QCString &title);
     void writeMemberGroups(OutputList &ol);
     void writeAuthorSection(OutputList &ol);
+    void writeTextBlob(OutputList &ol,const QCString &textBlob);
     void startMemberDocumentation(OutputList &ol);
     void endMemberDocumentation(OutputList &ol);
 

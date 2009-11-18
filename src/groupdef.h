@@ -124,6 +124,7 @@ class GroupDef : public Definition
     void writeDetailedDescription(OutputList &ol,const QCString &title);
     void writeBriefDescription(OutputList &ol);
     void writeMemberGroups(OutputList &ol);
+    void writeTextBlob(OutputList &ol,const QCString &textBlob);
     void startMemberDeclarations(OutputList &ol);
     void endMemberDeclarations(OutputList &ol);
     void startMemberDocumentation(OutputList &ol);

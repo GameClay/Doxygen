@@ -35,7 +35,7 @@ struct LayoutDocEntry
               MemberDeclStart, MemberDeclEnd, MemberDecl,
               MemberDefStart, MemberDefEnd, MemberDef,
               BriefDesc, DetailedDesc,
-              AuthorSection,
+              AuthorSection, TextBlob,
               
               // Class specific items
               ClassIncludes,
@@ -78,6 +78,13 @@ struct LayoutDocEntrySection: public LayoutDocEntrySimple
   LayoutDocEntrySection(Kind k,const QCString &tl) :
     LayoutDocEntrySimple(k), title(tl) {}
   QCString title;
+};
+
+struct LayoutDocEntryBlob: public LayoutDocEntrySimple
+{
+   LayoutDocEntryBlob(Kind k,const QCString &txt) :
+      LayoutDocEntrySimple(k), text(txt) {}
+   QCString text;
 };
 
 /** @brief Represents of a member declaration list with configurable title and subtitle. */

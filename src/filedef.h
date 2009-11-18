@@ -194,6 +194,7 @@ class FileDef : public Definition
     void writeSourceLink(OutputList &ol);
     void writeNamespaceDeclarations(OutputList &ol,const QCString &title);
     void writeClassDeclarations(OutputList &ol,const QCString &title);
+    void writeTextBlob(OutputList &ol,const QCString &textBlob);
     void startMemberDeclarations(OutputList &ol);
     void endMemberDeclarations(OutputList &ol);
     void startMemberDocumentation(OutputList &ol);

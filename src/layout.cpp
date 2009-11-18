@@ -239,6 +239,8 @@ class LayoutParser : public QXmlDefaultHandler
                                          theTranslator->trDetailedDescription()));
       m_sHandler.insert("class/authorsection", 
           new StartElementHandlerKind(this,LayoutDocEntry::AuthorSection,&LayoutParser::startSimpleEntry));
+      m_sHandler.insert("class/textblob", 
+         new StartElementHandlerKind(this,LayoutDocEntry::TextBlob,&LayoutParser::startBlobEntry));
       m_sHandler.insert("class/includes", 
           new StartElementHandlerKind(this,LayoutDocEntry::ClassIncludes,&LayoutParser::startSimpleEntry));
       m_sHandler.insert("class/inheritancegraph", 
@@ -391,6 +393,8 @@ class LayoutParser : public QXmlDefaultHandler
                                          theTranslator->trDetailedDescription()));
       m_sHandler.insert("namespace/authorsection", 
           new StartElementHandlerKind(this,LayoutDocEntry::AuthorSection,&LayoutParser::startSimpleEntry));
+      m_sHandler.insert("namespace/textblob", 
+         new StartElementHandlerKind(this,LayoutDocEntry::TextBlob,&LayoutParser::startBlobEntry));
       m_sHandler.insert("namespace/memberdecl", 
           new StartElementHandler(this,&LayoutParser::startMemberDecl));
       m_sHandler.insert("namespace/memberdecl/nestednamespaces", 
@@ -456,6 +460,8 @@ class LayoutParser : public QXmlDefaultHandler
                                          theTranslator->trDetailedDescription()));
       m_sHandler.insert("file/authorsection", 
           new StartElementHandlerKind(this,LayoutDocEntry::AuthorSection,&LayoutParser::startSimpleEntry));
+      m_sHandler.insert("file/textblob", 
+         new StartElementHandlerKind(this,LayoutDocEntry::TextBlob,&LayoutParser::startBlobEntry));
       m_sHandler.insert("file/includes", 
           new StartElementHandlerKind(this,LayoutDocEntry::FileIncludes,&LayoutParser::startSimpleEntry));
       m_sHandler.insert("file/includegraph", 
@@ -533,6 +539,8 @@ class LayoutParser : public QXmlDefaultHandler
                                          theTranslator->trDetailedDescription()));
       m_sHandler.insert("group/authorsection", 
           new StartElementHandlerKind(this,LayoutDocEntry::AuthorSection,&LayoutParser::startSimpleEntry));
+      m_sHandler.insert("group/textblob", 
+         new StartElementHandlerKind(this,LayoutDocEntry::TextBlob,&LayoutParser::startBlobEntry));
       m_sHandler.insert("group/groupgraph", 
           new StartElementHandlerKind(this,LayoutDocEntry::GroupGraph,&LayoutParser::startSimpleEntry));
       m_sHandler.insert("group/memberdecl/membergroups", 
@@ -689,6 +697,38 @@ class LayoutParser : public QXmlDefaultHandler
         LayoutDocManager::instance().addEntry((LayoutDocManager::LayoutPart)m_part,
                                               new LayoutDocEntrySimple(k));
       }
+    }
+
+    void startBlobEntry(LayoutDocEntry::Kind k,const QXmlAttributes &attrib)
+    {
+       bool isVisible = elemIsVisible(attrib);
+       QCString fileName = convertToQCString(attrib.value("file"));
+
+       // TODO: Add an inline text="" attribute which overrides file attribute
+
+       if (m_part!=-1 && !fileName.isEmpty() && isVisible)
+       {
+          QCString textBlob = "";
+
+          FILE *f = fopen(fileName, "rt");
+          if (f)
+          {
+             fseek(f, 0, SEEK_END);
+             uint fileLen = ftell(f);
+             textBlob.resize(fileLen + 1);
+             memset(textBlob.data(), 0, fileLen + 1);
+             fseek(f, 0, SEEK_SET);
+             fread(textBlob.data(), sizeof(char), fileLen, f);
+             fclose(f);
+          }
+
+          if (!textBlob.isEmpty())
+          {
+             // TODO: Add in XML attributes for HtmlOnly etc
+             LayoutDocManager::instance().addEntry((LayoutDocManager::LayoutPart)m_part,
+                new LayoutDocEntryBlob(k, textBlob));
+          }
+       }
     }
 
     void startSectionEntry(LayoutDocEntry::Kind k,const QXmlAttributes &attrib,

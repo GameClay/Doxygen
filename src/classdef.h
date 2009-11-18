@@ -312,6 +312,7 @@ class ClassDef : public Definition
     void writeDeclaration(OutputList &ol,MemberDef *md,bool inGroup);
     void writeQuickMemberLinks(OutputList &ol,MemberDef *md) const;
     void reclassifyMember(MemberDef *md,MemberDef::MemberType t);
+    void writeTextBlob(OutputList &ol,const QCString &textBlob);
     
     bool visited;
 

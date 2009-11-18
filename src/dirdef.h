@@ -82,6 +82,7 @@ class DirDef : public Definition
     void writeDirectoryGraph(OutputList &ol);
     void writeSubDirList(OutputList &ol);
     void writeFileList(OutputList &ol);
+    void writeTextBlob(OutputList &ol,const QCString &textBlob);
     void startMemberDeclarations(OutputList &ol);
     void endMemberDeclarations(OutputList &ol);
 
