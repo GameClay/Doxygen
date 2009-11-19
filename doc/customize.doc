@@ -173,11 +173,13 @@ Some tags have a \c title attribute. This attribute can be used
 to customize the title doxygen will use as a header for the piece.
 
 The \c textblob tag allows you to insert text from a file at any point
-in the layout. If the \c file attribute is empty, or the doxygen cannot
-find the specified file, no text will be added to the page by this tag.
+in the layout. If both the \c text attribute, and \c file attribute are 
+empty, or the doxygen cannot find the specified file, no text will be 
+added by this tag. 
 \verbatim
   ...
   <textblob file="foo.txt"/>
+  <textblob text="Test text blob"/>
   ...
 \endverbatim
 
