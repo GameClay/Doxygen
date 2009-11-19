@@ -703,28 +703,34 @@ class LayoutParser : public QXmlDefaultHandler
     {
        bool isVisible = elemIsVisible(attrib);
        QCString fileName = convertToQCString(attrib.value("file"));
+       QCString textAttrib = convertToQCString(attrib.value("text"));
 
-       // TODO: Add an inline text="" attribute which overrides file attribute
-
-       if (m_part!=-1 && !fileName.isEmpty() && isVisible)
+       // TODO: Add in XML attributes for HtmlOnly etc
+       if (m_part!=-1 && isVisible)
        {
           QCString textBlob = "";
 
-          FILE *f = fopen(fileName, "rt");
-          if (f)
+          if(!textAttrib.isEmpty())
           {
-             fseek(f, 0, SEEK_END);
-             uint fileLen = ftell(f);
-             textBlob.resize(fileLen + 1);
-             memset(textBlob.data(), 0, fileLen + 1);
-             fseek(f, 0, SEEK_SET);
-             fread(textBlob.data(), sizeof(char), fileLen, f);
-             fclose(f);
+             textBlob = textAttrib;
+          }
+          else if(!fileName.isEmpty())
+          {
+             FILE *f = fopen(fileName, "rt");
+             if (f)
+             {
+                fseek(f, 0, SEEK_END);
+                uint fileLen = ftell(f);
+                textBlob.resize(fileLen + 1);
+                memset(textBlob.data(), 0, fileLen + 1);
+                fseek(f, 0, SEEK_SET);
+                fread(textBlob.data(), sizeof(char), fileLen, f);
+                fclose(f);
+             }
           }
 
           if (!textBlob.isEmpty())
           {
-             // TODO: Add in XML attributes for HtmlOnly etc
              LayoutDocManager::instance().addEntry((LayoutDocManager::LayoutPart)m_part,
                 new LayoutDocEntryBlob(k, textBlob));
           }
