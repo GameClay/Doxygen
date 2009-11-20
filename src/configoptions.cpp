@@ -1011,9 +1011,22 @@ void addConfigOptions(Config *cfg)
   cb = cfg->addBool(
                  "ALPHABETICAL_INDEX",
                  "If the ALPHABETICAL_INDEX tag is set to YES, an alphabetical index\n"
-                 "of all compounds will be generated. Enable this if the project\n"
-                 "contains a lot of classes, structs, unions or interfaces.",
-                 FALSE
+                 "of all compounds will be generated.",
+                 TRUE
+                );
+  //----
+  cb = cfg->addBool(
+                 "CLASS_HIERARCHY_INDEX",
+                 "If the CLASS_HIERARCHY_INDEX tag is set to YES, a hierarchical index\n"
+                 "of all compounds will be generated.",
+                 TRUE
+                );
+  //----
+  cb = cfg->addBool(
+                 "CLASS_MEMBER_INDEX",
+                 "If the CLASS_MEMBER_INDEX tag is set to YES, an alphabetical index\n"
+                 "containing all members, of all compounds will be generated.",
+                 TRUE
                 );
   //----
   ci = cfg->addInt(

@@ -7230,17 +7230,23 @@ static void generateClassDocs()
   msg("Generating annotated compound index...\n");
   writeAnnotatedIndex(*g_outputList);
 
-  //if (Config_getBool("ALPHABETICAL_INDEX"))
-  //{
+  if (Config_getBool("ALPHABETICAL_INDEX"))
+  {
     msg("Generating alphabetical compound index...\n");
     writeAlphabeticalIndex(*g_outputList);
-  //}
+  }
 
-  msg("Generating hierarchical class index...\n");
-  writeHierarchicalIndex(*g_outputList);
+  if (Config_getBool("CLASS_HIERARCHY_INDEX"))
+  {
+    msg("Generating hierarchical class index...\n");
+    writeHierarchicalIndex(*g_outputList);
+  }
 
-  msg("Generating member index...\n");
-  writeClassMemberIndex(*g_outputList);
+  if (Config_getBool("CLASS_MEMBER_INDEX"))
+  {
+    msg("Generating member index...\n");
+    writeClassMemberIndex(*g_outputList);
+  }
 
   if (Doxygen::exampleSDict->count()>0)
   {
