@@ -1158,7 +1158,7 @@ void HtmlDocVisitor::visitPre(DocImage *img)
     {
       baseName=baseName.right(baseName.length()-i-1);
     }
-    m_t << "<div align=\"center\">" << endl;
+    m_t << "<div class=\"doxygen_image\">" << endl;
     m_t << "<img src=\"" << img->relPath() << img->name() << "\" alt=\"" 
       << baseName << "\"" << "/>" << endl;
     if (img->hasCaption())
